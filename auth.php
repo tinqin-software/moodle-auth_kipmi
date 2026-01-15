@@ -92,9 +92,7 @@ class auth_plugin_kipmi extends auth_plugin_base {
      * @return void
      */
     public function loginpage_hook() {
-        global $PAGE;
-        // Add custom styles if needed
-        // $PAGE->requires->css(new moodle_url('/auth/kipmi/styles/styles.css'));
+        // Currently not used, available for future customization.
     }
 
     /**
@@ -139,10 +137,10 @@ class auth_plugin_kipmi extends auth_plugin_base {
      * data is retrieved and updated at login time from verifiable credentials.
      * No periodic synchronization is needed.
      *
-     * @param bool $do_updates Whether to update user records (unused)
-     * @return bool Always returns true
+     * @param bool $doupdates Whether to update user records (unused).
+     * @return bool Always returns true.
      */
-    public function sync_users($do_updates = true) {
+    public function sync_users($doupdates = true) {
         return true;
     }
 }
