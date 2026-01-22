@@ -215,6 +215,10 @@ $statusurl = (new moodle_url('/auth/kipmi/status.php', [
 $callbackurl = (new moodle_url('/auth/kipmi/callback.php'))->out(false);
 $sesskey = sesskey();
 
+// Get localized strings for JavaScript.
+$strtimeout = get_string('auth_timeout', 'auth_kipmi');
+$strfailed = get_string('auth_failed_try_again', 'auth_kipmi');
+
 // JavaScript for status polling
 $js = <<<JAVASCRIPT
 (function() {
@@ -226,7 +230,7 @@ $js = <<<JAVASCRIPT
     function poll() {
         if (!polling || attempts >= maxAttempts) {
             if (attempts >= maxAttempts) {
-                alert('Authentication timeout. Please try again.');
+                alert('{$strtimeout}');
                 window.location.href = '{$CFG->wwwroot}/login/index.php';
             }
             return;
@@ -260,7 +264,7 @@ $js = <<<JAVASCRIPT
                 form.submit();
             } else if (data && data.status === 'failed') {
                 polling = false;
-                alert('Authentication failed. Please try again.');
+                alert('{$strfailed}');
                 window.location.href = '{$CFG->wwwroot}/login/index.php';
             } else {
                 // Still waiting
