@@ -29,8 +29,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Plugin information
-$string['pluginname'] = 'KIPMI Wallet Authentication';
-$string['auth_kipmi_description'] = 'Authenticate users using KIPMI wallet and Verifiable Credentials (OIDC4VP).';
+$string['pluginname'] = 'KIPMI wallet authentication';
+$string['auth_kipmi_description'] = 'Authenticate users using KIPMI wallet and verifiable credentials (OIDC4VP).';
 
 // Cache definitions
 $string['cachedef_authsessions'] = 'Temporary storage for KIPMI authentication sessions during VP verification';
@@ -60,9 +60,11 @@ $string['default_lastname'] = 'Default last name';
 $string['default_lastname_desc'] = 'Default last name to use when the wallet credential does not provide a family_name attribute';
 
 // Login page strings
-$string['scan_with_wallet'] = 'Scan QR Code with KIPMI Wallet';
+$string['scan_with_wallet'] = 'Scan QR code with KIPMI wallet';
 $string['scan_instructions'] = 'Open your KIPMI wallet app and scan this QR code to authenticate. The page will automatically continue once verification is complete.';
-$string['qr_code_alt'] = 'KIPMI Authentication QR Code';
+$string['qr_code_alt'] = 'KIPMI authentication QR code';
+$string['auth_timeout'] = 'Authentication timeout. Please try again.';
+$string['auth_failed_try_again'] = 'Authentication failed. Please try again.';
 
 // Error messages
 $string['vp_verifier_not_configured'] = 'VP Verifier URL not configured. Please configure the KIPMI authentication plugin.';
