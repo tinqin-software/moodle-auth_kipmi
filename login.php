@@ -205,83 +205,26 @@ if (debugging('', DEBUG_DEVELOPER)) {
     );
 }
 
-// Status polling endpoint
-$statusurl = (new moodle_url('/auth/kipmi/status.php', [
-    'sessionid' => $sessionid,
-    'sesskey' => sesskey(),
-]))->out(false);
-
-// Callback URL
+// Callback URL for form submission after successful authentication.
 $callbackurl = (new moodle_url('/auth/kipmi/callback.php'))->out(false);
-$sesskey = sesskey();
+$loginurl = (new moodle_url('/login/index.php'))->out(false);
 
 // Get localized strings for JavaScript.
 $strtimeout = get_string('auth_timeout', 'auth_kipmi');
 $strfailed = get_string('auth_failed_try_again', 'auth_kipmi');
 
-// JavaScript for status polling
-$js = <<<JAVASCRIPT
-(function() {
-    var polling = true;
-    var pollInterval = 2000; // 2 seconds
-    var maxAttempts = 150; // 5 minutes total
-    var attempts = 0;
-
-    function poll() {
-        if (!polling || attempts >= maxAttempts) {
-            if (attempts >= maxAttempts) {
-                alert('{$strtimeout}');
-                window.location.href = '{$CFG->wwwroot}/login/index.php';
-            }
-            return;
-        }
-
-        attempts++;
-
-        fetch("{$statusurl}", {
-            credentials: "same-origin",
-            method: "GET"
-        })
-        .then(function(response) {
-            console.log('Status response:', response.status);
-            return response.json();
-        })
-        .then(function(data) {
-            console.log('Status data:', data);
-            if (data && data.status === 'success') {
-                console.log('SUCCESS - submitting form to callback');
-                polling = false;
-
-                // Submit to callback
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{$callbackurl}";
-                form.innerHTML =
-                    '<input type="hidden" name="state" value="{$state}">' +
-                    '<input type="hidden" name="sessionid" value="{$sessionid}">' +
-                    '<input type="hidden" name="sesskey" value="{$sesskey}">';
-                document.body.appendChild(form);
-                form.submit();
-            } else if (data && data.status === 'failed') {
-                polling = false;
-                alert('{$strfailed}');
-                window.location.href = '{$CFG->wwwroot}/login/index.php';
-            } else {
-                // Still waiting
-                setTimeout(poll, pollInterval);
-            }
-        })
-        .catch(function(error) {
-            console.error('Polling error:', error);
-            setTimeout(poll, pollInterval);
-        });
-    }
-
-    // Start polling
-    poll();
-})();
-JAVASCRIPT;
-
-$PAGE->requires->js_init_code($js);
+// Initialize the AMD module for status polling.
+$PAGE->requires->js_call_amd(
+    'auth_kipmi/login',
+    'init',
+    [
+        $sessionid,
+        $state,
+        $callbackurl,
+        $loginurl,
+        $strtimeout,
+        $strfailed,
+    ]
+);
 
 echo $OUTPUT->footer();
