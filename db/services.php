@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for the KIPMI Wallet authentication plugin.
+ * External services definition for auth_kipmi.
  *
  * @package    auth_kipmi
  * @copyright  2025 Tinqin
@@ -24,8 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'auth_kipmi';
-$plugin->version   = 2026012300;        // YYYYMMDDXX
-$plugin->requires  = 2022041900;        // Moodle 4.0+
-$plugin->release   = '1.0.0';           // Initial release - VP Verifier integration
-$plugin->maturity  = MATURITY_ALPHA;
+$functions = [
+    'auth_kipmi_check_auth_status' => [
+        'classname'     => 'auth_kipmi\external\check_auth_status',
+        'methodname'    => 'execute',
+        'description'   => 'Check the authentication status for a KIPMI wallet session',
+        'type'          => 'read',
+        'ajax'          => true,
+        'loginrequired' => false,
+    ],
+];
