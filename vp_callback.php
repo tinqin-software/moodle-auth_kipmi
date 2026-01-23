@@ -44,7 +44,7 @@ debugging('=== VP CALLBACK RECEIVED ===', DEBUG_DEVELOPER);
 debugging('Request method: ' . $_SERVER['REQUEST_METHOD'], DEBUG_DEVELOPER);
 debugging('Query string: ' . ($_SERVER['QUERY_STRING'] ?? 'none'), DEBUG_DEVELOPER);
 
-// Get raw POST body.
+// Get raw POST body and decode JSON.
 $rawbody = file_get_contents('php://input');
 debugging('Raw body: ' . $rawbody, DEBUG_DEVELOPER);
 $data = json_decode($rawbody, true);
@@ -54,6 +54,18 @@ if (!$data || !isset($data['status'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid payload: missing status']);
     exit;
+}
+
+// Sanitize incoming data from external service.
+$data['status'] = clean_param($data['status'], PARAM_ALPHA);
+if (isset($data['result']) && is_array($data['result'])) {
+    // Sanitize each field in the result array.
+    foreach ($data['result'] as $key => $value) {
+        $cleankey = clean_param($key, PARAM_ALPHANUMEXT);
+        $cleanvalue = is_string($value) ? clean_param($value, PARAM_TEXT) : $value;
+        unset($data['result'][$key]);
+        $data['result'][$cleankey] = $cleanvalue;
+    }
 }
 
 // Get sessionid from URL parameter.
