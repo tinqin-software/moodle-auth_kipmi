@@ -67,6 +67,10 @@ class check_auth_status extends external_api {
         ]);
         $sessionid = $params['sessionid'];
 
+        // Validate context (required for all external functions).
+        $context = \context_system::instance();
+        self::validate_context($context);
+
         // Validate sessionid format: moodle-{16-hex-chars}-{unix-timestamp}.
         if (!preg_match('/^moodle-[a-f0-9]{16}-\d+$/', $sessionid)) {
             return ['status' => 'error', 'message' => 'Invalid session ID format'];
