@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'auth_kipmi';
-$plugin->version   = 2026012700;        // YYYYMMDDXX
+$plugin->version   = 2026012701;        // YYYYMMDDXX
 $plugin->requires  = 2022041900;        // Moodle 4.0+
 $plugin->release   = '1.0.0';           // Initial release - VP Verifier integration
 $plugin->maturity  = MATURITY_ALPHA;
