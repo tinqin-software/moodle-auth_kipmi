@@ -2,6 +2,16 @@
 
 All notable changes to the KIPMI Wallet Authentication plugin will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Anonymous QR polling (`auth_kipmi_check_auth_status` external function) no
+  longer throws `requireloginerror`. Removed the `validate_context()` call that
+  was incorrectly added to an intentionally-anonymous endpoint; authorization
+  is already enforced by the `$SESSION->auth_kipmi->sessionid` ownership check
+  a few lines below. Without this fix, the QR login page polls silently forever
+  and never completes, even after a successful wallet scan.
+
 ## [1.0.0] - 2026-01-08
 
 ### Added

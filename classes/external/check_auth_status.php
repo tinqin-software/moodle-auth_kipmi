@@ -67,9 +67,13 @@ class check_auth_status extends external_api {
         ]);
         $sessionid = $params['sessionid'];
 
-        // Validate context (required for all external functions).
-        $context = \context_system::instance();
-        self::validate_context($context);
+        // This endpoint is intentionally anonymous: the caller is a user in the
+        // middle of authenticating via the KIPMI wallet QR code and has no
+        // Moodle login yet. Authorization is enforced below by verifying the
+        // caller owns $SESSION->auth_kipmi (session-token model). Do NOT call
+        // self::validate_context() here — it always enforces require_login()
+        // and would make this endpoint unreachable for its intended callers.
+        // See db/services.php (loginrequired=false) for the matching declaration.
 
         // Validate sessionid format: moodle-{16-hex-chars}-{unix-timestamp}.
         if (!preg_match('/^moodle-[a-f0-9]{16}-\d+$/', $sessionid)) {
